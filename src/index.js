@@ -9,6 +9,7 @@ const btnLoadMore = document.querySelector('.load-more');
 let page = 1;
 let lastSearch = '';
 btnLoadMore.style.display = 'none';
+const lightbox = new SimpleLightbox('.photo-card a');
 
 
 form.addEventListener('submit', (e) => {
@@ -29,7 +30,7 @@ form.addEventListener('submit', (e) => {
 				} else {
 					Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
 					createCardList(response.data.hits);
-					// lightbox.refresh();
+					lightbox.refresh();
 					btnLoadMore.style.display = 'block';
 				}
 			})
@@ -51,13 +52,13 @@ btnLoadMore.addEventListener('click', () => {
 			} else {
 				console.log(response);
 				appendCardList(response.data.hits);
+				lightbox.refresh();
 				btnLoadMore.style.display = 'block';
 			}
 		})
 		.catch(error => {
 			console.log('error', error.message);
 		})
-	// lightbox.refresh();
 })
 
 function createCardList(list) {
@@ -67,8 +68,8 @@ function appendCardList(list) {
     gallery.insertAdjacentHTML('beforeend',createMarkupList(list)); 
 }
 function createMarkupListItem(item) {
-	return`<div class="photo-card"><a  href=${item.largeImageURL}>
-  <img src=${item.webformatURL} alt="${item.tags}" loading="lazy" /></a>
+	return`<div class="photo-card"><div class="photo-card-img"><a  href=${item.largeImageURL}>
+  <img src=${item.webformatURL} alt="${item.tags}" loading="lazy" /></a></div>
   <div class="info">
     <p class="info-item">
       <b>Likes</b> ${item.likes}
