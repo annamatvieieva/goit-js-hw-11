@@ -9,10 +9,7 @@ const btnLoadMore = document.querySelector('.load-more');
 let page = 1;
 let lastSearch = '';
 btnLoadMore.style.display = 'none';
-const lightbox = new SimpleLightbox('.photo-card a', {
-  captionsData: "alt",
-  captionDelay: 250,
-});
+
 
 form.addEventListener('submit', (e) => {
 	e.preventDefault();
@@ -27,18 +24,19 @@ form.addEventListener('submit', (e) => {
 		fetchPhotos(search,page)
 			.then(response => {
 				console.log(response);
-				if (response.hits.length == 0) {
+				if (response.data.hits.length == 0) {
 					Notify.failure("Sorry, there are no images matching your search query. Please try again.");
 				} else {
-					Notify.success(`Hooray! We found ${response.totalHits} images.`);
-					createCardList(response.hits);
+					Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
+					createCardList(response.data.hits);
+					// lightbox.refresh();
 					btnLoadMore.style.display = 'block';
 				}
 			})
 			.catch(error => {
 				console.log('error', error.message);
 			})
-		lightbox.refresh();
+		
 	}
 })
 btnLoadMore.addEventListener('click', () => {
@@ -46,20 +44,20 @@ btnLoadMore.addEventListener('click', () => {
 	btnLoadMore.style.display = 'none';
 	fetchPhotos(lastSearch,page)
 		.then(response => {
-			let totalPage = response.totalHits / response.hits.length
+			let totalPage = response.data.totalHits / response.data.hits.length;
 			if (totalPage <= page) {
 				btnLoadMore.style.display = 'none';
 				Notify.failure("We're sorry, but you've reached the end of search results.");
 			} else {
 				console.log(response);
-				appendCardList(response.hits);
+				appendCardList(response.data.hits);
 				btnLoadMore.style.display = 'block';
 			}
 		})
 		.catch(error => {
 			console.log('error', error.message);
 		})
-	lightbox.refresh();
+	// lightbox.refresh();
 })
 
 function createCardList(list) {
