@@ -1,7 +1,7 @@
 import fetchPhotos from './fetchPhotos.js';
 import { Notify } from 'notiflix';
 import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
+import  "simplelightbox/dist/simple-lightbox.min.css";
 
 const form = document.querySelector('.search-form');
 const gallery = document.querySelector('.gallery');
@@ -9,7 +9,10 @@ const btnLoadMore = document.querySelector('.load-more');
 let page = 1;
 let lastSearch = '';
 btnLoadMore.style.display = 'none';
-const lightbox = new SimpleLightbox(".gallery .gallery-item");
+const lightbox = new SimpleLightbox('.photo-card a', {
+  captionsData: "alt",
+  captionDelay: 250,
+});
 
 form.addEventListener('submit', (e) => {
 	e.preventDefault();
@@ -35,7 +38,7 @@ form.addEventListener('submit', (e) => {
 			.catch(error => {
 				console.log('error', error.message);
 			})
-
+		lightbox.refresh();
 	}
 })
 btnLoadMore.addEventListener('click', () => {
@@ -66,7 +69,7 @@ function appendCardList(list) {
     gallery.insertAdjacentHTML('beforeend',createMarkupList(list)); 
 }
 function createMarkupListItem(item) {
-	return`<div class="photo-card"><a class="gallery-item" href=${item.largeImageURL}>
+	return`<div class="photo-card"><a  href=${item.largeImageURL}>
   <img src=${item.webformatURL} alt="${item.tags}" loading="lazy" /></a>
   <div class="info">
     <p class="info-item">
